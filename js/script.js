@@ -1,8 +1,8 @@
 // script-web-completo.js
 // Script para manejar todos los formularios de la web y conectar con Supabase
 
-const SUPABASE_URL = 'https://ygyujbvhgabyldtjtpvv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlneXVqYnZoZ2FieWxkdGp0cHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyNzk3MzksImV4cCI6MjA3NDg1NTczOX0.Jv1ywCplo1V8VCUcWQuZ4JbFaeqDBQI3pZiFSvWzlso';
+const SUPABASE_URL = 'https://onbzyaydbpmezsybdrfq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9uYnp5YXlkYnBtZXpzeWJkcmZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyODAxMTIsImV4cCI6MjA3NDg1NjExMn0.rBr4zZNwlEo5U5hIhunLfW8gunl7hp7DMXtWRuHfCQk';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.addEventListener('DOMContentLoaded', () => {

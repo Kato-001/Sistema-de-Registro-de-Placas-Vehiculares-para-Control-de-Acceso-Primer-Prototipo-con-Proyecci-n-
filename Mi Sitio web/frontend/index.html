@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗 Sistema de Reconocimiento y Registro de Placas Vehiculares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Variables de entorno para la aplicación - CONFIGURADAS -->
+    <meta name="env-supabase_url" content="https://ygyujbvhgabyldtjtpvv.supabase.co">
+    <meta name="env-supabase_anon_key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlneXVqYnZoZ2FieWxkdGp0cHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyNzk3MzksImV4cCI6MjA3NDg1NTczOX0.Jv1ywCplo1V8VCUcWQuZ4JbFaeqDBQI3pZiFSvWzlso">
+    
+    <!-- Librería de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🏢</div>
+                    <div class="logo-text">
+                        <h1>🚗 Sistema de Reconocimiento y Registro de Placas Vehiculares</h1>
+                        <p>Universidad Pública - Proyecto de Investigación 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link active" data-tab="dashboard">🏠 Inicio</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-tab="register">📝 Registro</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-tab="history">📜 Historial</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Dashboard -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-welcome">
+                <h2>👋 Bienvenido al Sistema de Control Vehicular</h2>
+                <p>Aquí podrá registrar, consultar y gestionar las placas de vehículos que ingresan a la universidad.</p>
+            </div>
+            
+            <div class="dashboard-buttons">
+                <a href="#" class="dashboard-btn" data-tab="register">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>➕ Registrar Vehículo</h3>
+                    <p>Agregar nuevo vehículo al sistema</p>
+                </a>
+                
+                <a href="#" class="dashboard-btn" data-tab="history">
+                    <i class="fas fa-history"></i>
+                    <h3>📜 Ver Historial</h3>
+                    <p>Revisar registros anteriores</p>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Registrar Vehículo -->
+        <div id="register" class="tab-content">
+            <h2>🚘 Registro de Vehículos</h2>
+            <p>Seleccione el tipo de vehículo que desea registrar:</p>
+            
+            <div class="registration-menu">
+                <div class="registration-option with-plate active" data-form="with-plate">
+                    Vehículos con Placas
+                </div>
+                
+                <div class="registration-option without-plate" data-form="without-plate">
+                    Vehículos sin Placas
+                </div>
+                
+                <div class="registration-option restricted" data-form="restricted">
+                    Vehículos con Placas Restringidas
+                </div>
+            </div>
+            
+            <!-- Formulario para vehículos con placa -->
+            <div id="with-plate-form" class="vehicle-form active">
+                <h3>📝 Registro de Vehículo con Placa</h3>
+                
+                <div class="form-group">
+                    <label for="vehiclePhoto">📷 Foto de la Placa (Opcional):</label>
+                    <div class="camera-container" id="registerCamera">
+                        <div class="camera-icon">📷</div>
+                        <p>Haga clic aquí para subir una foto de la placa</p>
+                        <input type="file" id="registerFileInput" accept="image/*" style="display: none;">
+                        <img id="registerPreview" class="preview-image" alt="Vista previa de la placa">
+                    </div>
+                    <p class="photo-optional">La foto es opcional, pero recomendada para mejor identificación.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="plateNumberRegister">🔢 Número de Placa:</label>
+                    <input type="text" id="plateNumberRegister" placeholder="Ej: ABC123" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nombrePropietario">🧑 Nombre del Propietario:</label>
+                    <input type="text" id="nombrePropietario" placeholder="Ej: Juan Pérez" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cedulaPropietario">🪪 Cédula del Propietario:</label>
+                    <input type="text" id="cedulaPropietario" placeholder="Ej: 12345678" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipoVehiculo">🚗 Tipo de Vehículo:</label>
+                    <select id="tipoVehiculo" required>
+                        <option value="">Seleccione un tipo</option>
+                        <option value="Automóvil">Automóvil</option>
+                        <option value="Motocicleta">Motocicleta</option>
+                        <option value="Camioneta">Camioneta</option>
+                        <option value="Camión">Camión</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="facultad">🏫 Facultad/Área:</label>
+                    <select id="facultad" required>
+                        <option value="">Seleccione una facultad</option>
+                        <option value="Ingeniería">Ingeniería</option>
+                        <option value="Ciencias">Ciencias</option>
+                        <option value="Humanidades">Humanidades</option>
+                        <option value="Medicina">Medicina</option>
+                        <option value="Administración">Administración</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="color">🎨 Color del Vehículo:</label>
+                    <input type="text" id="color" placeholder="Ej: Rojo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observaciones">✍️ Observaciones:</label>
+                    <textarea id="observaciones" rows="3" placeholder="Observaciones adicionales..."></textarea>
+                </div>
+                
+                <button id="registerBtn" class="btn btn-primary">💾 Guardar Registro</button>
+            </div>
+            
+            <!-- Formulario para vehículos sin placa -->
+            <div id="without-plate-form" class="vehicle-form">
+                <h3>🏍️ Registro de Vehículo sin Placa</h3>
+                
+                <div class="form-group">
+                    <label for="noPlateVehiclePhoto">📷 Foto del Vehículo (Opcional):</label>
+                    <div class="camera-container" id="noPlateCamera">
+                        <div class="camera-icon">📷</div>
+                        <p>Haga clic aquí para subir una foto del vehículo</p>
+                        <input type="file" id="noPlateFileInput" accept="image/*" style="display: none;">
+                        <img id="noPlatePreview" class="preview-image" alt="Vista previa del vehículo">
+                    </div>
+                    <p class="photo-optional">La foto es opcional, pero recomendada para mejor identificación.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nombreConductor">🧑 Nombre del Conductor:</label>
+                    <input type="text" id="nombreConductor" placeholder="Ej: Carlos Ruiz" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cedulaConductor">🪪 Cédula del Conductor:</label>
+                    <input type="text" id="cedulaConductor" placeholder="Ej: 87654321" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="driverLicensePhoto">📋 Foto de Permiso de Conducir o Carnet de Identidad (Opcional):</label>
+                    <div class="camera-container" id="licenseCamera">
+                        <div class="camera-icon">📷</div>
+                        <p>Haga clic aquí para subir una foto del permiso de conducir o carnet</p>
+                        <input type="file" id="licenseFileInput" accept="image/*" style="display: none;">
+                        <img id="licensePreview" class="preview-image" alt="Vista previa del permiso">
+                    </div>
+                    <p class="photo-optional">La foto es opcional, pero recomendada para mejor identificación.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipoVehiculoSinPlaca">🚗 Tipo de Vehículo:</label>
+                    <select id="tipoVehiculoSinPlaca" required>
+                        <option value="">Seleccione un tipo</option>
+                        <option value="Automóvil">Automóvil</option>
+                        <option value="Motocicleta">Motocicleta</option>
+                        <option value="Camioneta">Camioneta</option>
+                        <option value="Camión">Camión</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="facultadSinPlaca">🏫 Facultad/Área:</label>
+                    <select id="facultadSinPlaca" required>
+                        <option value="">Seleccione una facultad</option>
+                        <option value="Ingeniería">Ingeniería</option>
+                        <option value="Ciencias">Ciencias</option>
+                        <option value="Humanidades">Humanidades</option>
+                        <option value="Medicina">Medicina</option>
+                        <option value="Administración">Administración</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observacionesSinPlaca">✍️ Observaciones:</label>
+                    <textarea id="observacionesSinPlaca" rows="3" placeholder="Observaciones adicionales..."></textarea>
+                </div>
+                
+                <button id="noPlateRegisterBtn" class="btn btn-warning">💾 Registrar Vehículo Sin Placa</button>
+            </div>
+            
+            <!-- Formulario para vehículos con placas restringidas -->
+            <div id="restricted-form" class="vehicle-form">
+                <h3>⛔ Registro de Vehículo con Placa Restringida</h3>
+                
+                <div class="form-group">
+                    <label for="restrictedPlate">🔢 Número de Placa a Restringir:</label>
+                    <input type="text" id="restrictedPlate" placeholder="Ej: ABC123" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="motivo">📋 Motivo de la Restricción:</label>
+                    <select id="motivo" required>
+                        <option value="">Seleccione un motivo</option>
+                        <option value="Reporte de robo">Reporte de robo</option>
+                        <option value="Infracciones reiteradas">Infracciones reiteradas</option>
+                        <option value="Vehículo no autorizado">Vehículo no autorizado</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="motivoPersonalizado">✍️ Motivo Personalizado (si seleccionó "Otro"):</label>
+                    <textarea id="motivoPersonalizado" rows="2" placeholder="Especifique el motivo de restricción..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fechaInicio">📅 Fecha de Inicio de Restricción:</label>
+                    <input type="date" id="fechaInicio" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fechaFin">📅 Fecha de Fin de Restricción:</label>
+                    <input type="date" id="fechaFin" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="responsable">👤 Responsable de la Restricción:</label>
+                    <input type="text" id="responsable" placeholder="Ej: Departamento de Seguridad" required>
+                </div>
+                
+                <button id="restrictedRegisterBtn" class="btn btn-danger">💾 Registrar Restricción</button>
+            </div>
+            
+            <div id="registerResult" class="result-container">
+                <!-- Resultado del registro se mostrará aquí -->
+            </div>
+        </div>
+        
+        <!-- Historial -->
+        <div id="history" class="tab-content">
+            <h2>📜 Historial de Registros</h2>
+            <p>Lista de todos los vehículos registrados en el sistema.</p>
+            
+            <!-- Botón para actualizar la tabla -->
+            <button id="refreshTableBtn" class="refresh-button">
+                <i class="fas fa-sync-alt"></i> Actualizar Tabla
+            </button>
+            
+            <!-- Búsqueda de vehículos -->
+            <div class="search-section">
+                <h3>🔍 Búsqueda de Vehículos</h3>
+                <p>Ingrese la placa o ID del vehículo que desea buscar:</p>
+                <div class="search-form">
+                    <input type="text" id="searchInput" placeholder="Ej: ABC123 o SINPL-2025-001" class="search-input">
+                    <button id="searchBtn" class="btn btn-primary">🔍 Buscar</button>
+                </div>
+                
+                <div id="searchResult" class="result-container">
+                    <!-- Resultado de la búsqueda se mostrará aquí -->
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Foto</th>
+                            <th>Placa/ID</th>
+                            <th>Tipo Vehículo</th>
+                            <th>Dueño/Conductor</th>
+                            <th>Facultad/Área</th>
+                            <th>Fecha y Hora</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Los datos se cargarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para editar vehículo -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">✏️ Editar Vehículo</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="editModalBody">
+                <!-- Contenido del modal se cargará dinámicamente -->
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>Universidad Pública – Proyecto de Investigación 2025 – Feria de Innovación</p>
+                </div>
+                <div class="footer-icons">
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                    <a href="#"><i class="fas fa-link"></i></a>
+                    <a href="#"><i class="fas fa-mobile-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts de la aplicación -->
+    <script src="js/database-es.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
